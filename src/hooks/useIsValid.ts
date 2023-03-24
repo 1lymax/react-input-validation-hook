@@ -4,7 +4,7 @@ export const Validations = {
     isLongerThan: 'isLongerThan',
     isShorterThan: 'isShorterThan',
     isEmpty: 'isEmpty',
-    isEmailValid: 'emailValid',
+    isEmailValid: 'isEmailValid',
     isChecked: 'isChecked'
 }
 
@@ -13,7 +13,7 @@ type Validation = {
     value?: number | string | boolean
 }
 
-export const useIsValid = (value: any, title: string, validations: Validation[]  ) => {
+export const useIsValid = (value: any, title: string, validations: Validation[]) => {
     const [isEmpty, setIsEmpty] = useState<boolean>(false)
     const [isLongerThan, setIsLongerThan] = useState<boolean>(false)
     const [isShorterThan, setIsShorterThan] = useState<boolean>(false)

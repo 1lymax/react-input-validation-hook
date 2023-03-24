@@ -7,11 +7,9 @@ export const useCheckboxInput = (initialState: boolean) => {
         setChecked(e.target.checked)
     }
 
-
     return {
         type,
         checked,
         onChange
     }
-
 }

@@ -45,7 +45,7 @@ function App() {
             <InputErrorDescription isValid={agreeToRulesCheck.isValid} errors={agreeToRulesCheck.errors}/>
 
             <br/><br/>
-            
+
             <button type={"submit"} disabled={!isValidForm}>Login</button>
         </div>
     );
