@@ -8,20 +8,20 @@ function App() {
     const email = useInput('')
     const emailCheck = useIsValid(email.value, 'Email',
         [
-            { validation: Validations.isEmailValid }
+            { validation: Validations.IS_EMAIL_VALID }
         ])
 
     const password = useInput('')
     const passwordCheck = useIsValid(password.value, 'Password',
         [
-            { validation: Validations.isLongerThan, value: 30 },
-            { validation: Validations.isShorterThan, value: 5 }
+            { validation: Validations.IS_LONGER_THAN, value: 30 },
+            { validation: Validations.IS_SHORTER_THAN, value: 5 }
         ])
 
     const agreeToRules = useCheckboxInput(false)
     const agreeToRulesCheck = useIsValid(agreeToRules.checked, 'You must agree to our rules',
         [
-        { validation: Validations.isChecked }
+        { validation: Validations.IS_CHECKED }
         ])
 
 
@@ -32,17 +32,17 @@ function App() {
     return (
         <div>
             <input {...email} placeholder={"Email"}/>
-            <InputErrorDescription isValid={emailCheck.isValid} errors={emailCheck.errors}/>
+            <InputErrorDescription errors={emailCheck.errors}/>
 
             <br/><br/>
 
             <input {...password} placeholder={"Password"}/>
-            <InputErrorDescription isValid={passwordCheck.isValid} errors={passwordCheck.errors}/>
+            <InputErrorDescription errors={passwordCheck.errors}/>
 
             <br/><br/>
 
             <input {...agreeToRules}/> Agree to our rules
-            <InputErrorDescription isValid={agreeToRulesCheck.isValid} errors={agreeToRulesCheck.errors}/>
+            <InputErrorDescription errors={agreeToRulesCheck.errors}/>
 
             <br/><br/>
 
