@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from "react";
 import {useInput} from "./hooks/useInput";
 import {useIsValid, Validations} from "./hooks/useIsValid";
 import {InputErrorDescription} from "./components/InputErrorDescription";
@@ -6,22 +6,23 @@ import {useCheckboxInput} from "./hooks/useCheckboxInput";
 
 function App() {
     const email = useInput('')
+    const [firstSubmit, setFirstSubmit] = useState(false)
     const emailCheck = useIsValid(email.value, 'Email',
         [
-            { validation: Validations.isEmailValid }
+            { validation: Validations.IS_EMAIL_VALID }
         ])
 
     const password = useInput('')
     const passwordCheck = useIsValid(password.value, 'Password',
         [
-            { validation: Validations.isLongerThan, value: 30 },
-            { validation: Validations.isShorterThan, value: 5 }
+            { validation: Validations.IS_LONGER_THAN, value: 30 },
+            { validation: Validations.IS_SHORTER_THAN, value: 5 }
         ])
 
     const agreeToRules = useCheckboxInput(false)
     const agreeToRulesCheck = useIsValid(agreeToRules.checked, 'You must agree to our rules',
         [
-        { validation: Validations.isChecked }
+        { validation: Validations.IS_CHECKED }
         ])
 
 
@@ -29,24 +30,29 @@ function App() {
         passwordCheck.isValid &&
         agreeToRulesCheck.isValid
 
+
+    const onSubmit = () => {
+        if (!firstSubmit) setFirstSubmit(true)
+    };
+
     return (
-        <div>
+        <div style={{display: "flex", justifyContent: "left", alignItems: "flex-start", flexDirection: 'column', margin: "5% 25%"}}>
             <input {...email} placeholder={"Email"}/>
-            <InputErrorDescription isValid={emailCheck.isValid} errors={emailCheck.errors}/>
+            <InputErrorDescription visible={firstSubmit} errors={emailCheck.errors}/>
 
             <br/><br/>
 
             <input {...password} placeholder={"Password"}/>
-            <InputErrorDescription isValid={passwordCheck.isValid} errors={passwordCheck.errors}/>
+            <InputErrorDescription visible={firstSubmit} errors={passwordCheck.errors}/>
 
             <br/><br/>
 
             <input {...agreeToRules}/> Agree to our rules
-            <InputErrorDescription isValid={agreeToRulesCheck.isValid} errors={agreeToRulesCheck.errors}/>
+            <InputErrorDescription visible={firstSubmit} errors={agreeToRulesCheck.errors}/>
 
             <br/><br/>
 
-            <button type={"submit"} disabled={!isValidForm}>Login</button>
+            <button type={"submit"} disabled={!isValidForm && firstSubmit} onClick={onSubmit}>Login</button>
         </div>
     );
 }

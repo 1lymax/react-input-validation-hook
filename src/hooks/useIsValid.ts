@@ -1,19 +1,27 @@
 import {useEffect, useState} from "react";
 
 export const Validations = {
-    isLongerThan: 'isLongerThan',
-    isShorterThan: 'isShorterThan',
-    isEmpty: 'isEmpty',
-    isEmailValid: 'isEmailValid',
-    isChecked: 'isChecked'
-}
+    IS_LONGER_THAN: 'IS_LONGER_THAN',
+    IS_SHORTER_THAN: 'IS_SHORTER_THAN',
+    IS_EMPTY: 'IS_EMPTY',
+    IS_EMAIL_VALID: 'IS_EMAIL_VALID',
+    IS_CHECKED: 'IS_CHECKED'
+} as const
 
 type Validation = {
-    validation: string,
+    validation: keyof typeof Validations,
     value?: number | string | boolean
 }
 
-export const useIsValid = (value: any, title: string, validations: Validation[]) => {
+interface IUseIsValid {
+    (value: string | number | boolean, title: string, validations: Validation[]):
+        {
+            isValid: boolean,
+            errors: string[]
+        }
+}
+
+export const useIsValid: IUseIsValid = (value, title, validations) => {
     const [isEmpty, setIsEmpty] = useState<boolean>(false)
     const [isLongerThan, setIsLongerThan] = useState<boolean>(false)
     const [isShorterThan, setIsShorterThan] = useState<boolean>(false)
@@ -21,61 +29,60 @@ export const useIsValid = (value: any, title: string, validations: Validation[])
     const [isChecked, setIsChecked] = useState<boolean>(true)
     const [errors, setErrors] = useState<string[]>([])
 
-    const removeError = (error: string) => {
+    const removeError = (error: string): void => {
         setErrors(prevState => prevState.filter(item => item !== error))
     }
 
-    const addError = (error: string) => {
+    const addError = (error: string): void => {
         if (errors.indexOf(error) < 0) {
             setErrors(prevState => [...prevState, `${error}`])
         }
-
     }
 
     useEffect(() => {
-        for ( const validation of validations ) {
+        for (const validation of validations) {
             switch (validation.validation) {
-                case Validations.isEmpty:
-                    if (value.length < 1) {
+                case Validations.IS_EMPTY:
+                    if (typeof value === 'string' && value.length < 1) {
                         setIsEmpty(true)
                         addError(`${title} cannot be empty`)
-                    }else {
+                    } else {
                         setIsEmpty(false)
                         removeError(`${title} cannot be empty`)
                     }
                     break
-                case Validations.isLongerThan:
-                    if (validation.value && value.length > validation.value) {
+                case Validations.IS_LONGER_THAN:
+                    if (validation.value && typeof value === 'string' && value.length > validation.value) {
                         setIsLongerThan(true)
                         addError(`${title} cannot be more than ${validation.value} symbols`)
-                    }else {
+                    } else {
                         setIsLongerThan(false)
                         removeError(`${title} cannot be more than ${validation.value} symbols`)
                     }
                     break
-                case Validations.isShorterThan:
-                    if (validation.value && value.length < validation.value) {
+                case Validations.IS_SHORTER_THAN:
+                    if (validation.value && typeof value === 'string' && value.length < validation.value) {
                         setIsShorterThan(true)
                         addError(`${title} cannot be less than ${validation.value} symbols`)
-                    }else {
+                    } else {
                         setIsShorterThan(false)
                         removeError(`${title} cannot be less than ${validation.value} symbols`)
                     }
                     break
-                case Validations.isEmailValid:
-                    if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                case Validations.IS_EMAIL_VALID:
+                    if (typeof value === 'string' && !value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
                         setIsEmailValid(false)
                         addError(`${title} is wrong`)
-                    }else {
+                    } else {
                         setIsEmailValid(true)
                         removeError(`${title} is wrong`)
                     }
                     break
-                case Validations.isChecked:
+                case Validations.IS_CHECKED:
                     if (value) {
                         setIsChecked(true)
                         removeError(`${title}`)
-                    }else {
+                    } else {
                         setIsChecked(false)
                         addError(`${title}`)
                     }
